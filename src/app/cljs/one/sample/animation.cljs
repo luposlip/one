@@ -94,7 +94,8 @@
                      :after #(set-styles! (by-id "greet-button") {:display "none"})})))
 
 (defn show-welcome []
-	(play-animation (bind welcome {:effect :fade-in-and-show :time 600})))
+	(let [e {:effect :fade :end 0 :time 500}]
+		(play-animation #(parallel (bind cloud e) (bind form e) (bind welcome {:effect :fade-in-and-show :time 600})))))
 	
 (defn show-form
   "Move the greeting cloud out of view and show the form. Run when the
