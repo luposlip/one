@@ -17,7 +17,7 @@
 (def ^:private
   form-in {:effect :fade :start 0 :end 1 :time 800})
   
-(def ^:private meewee-log (log/get-logger "meewee"))
+(def ^:private lupo-log (log/get-logger "luposlip"))
 
 (defn initialize-views
   "Accepts the form and greeting view HTML and adds them to the
@@ -28,9 +28,8 @@
   (let [content (xpath "//div[@id='content']")]
     (destroy-children! content)
     (set-html! content form-html)
-	(append! content welcome-html)
-	(log/info meewee-log (str "welcome-html er: " (pr-str welcome-html)))
     (append! content greeting-html)
+	(append! content welcome-html)
     ;; Required for IE8 to work correctly
     (style/setOpacity (single-node (xpath label)) 1)
     (set-styles! (xpath cloud) {:opacity "0" :display "none" :margin-top "-500px"})
@@ -95,7 +94,6 @@
                      :after #(set-styles! (by-id "greet-button") {:display "none"})})))
 
 (defn show-welcome []
-	(log/info meewee-log "hey, hvad sker der her i show-welcome??")
 	(play-animation (bind welcome {:effect :fade-in-and-show :time 600})))
 	
 (defn show-form

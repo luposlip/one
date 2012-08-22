@@ -12,7 +12,7 @@
             [one.sample.animation :as fx]
 			[one.logging :as log]))
 			
-(def ^:private meewee-log (log/get-logger "meewee"))
+(def ^:private lupo-log (log/get-logger "luposlip"))
 
 (def ^{:doc "A map which contains chunks of HTML which may be used
   when rendering views."}
@@ -115,7 +115,6 @@
   :state)
 
 (defmethod render :init [_]
-  (log/info meewee-log (str "about to call initialize-views from render :init, (:welcome snippets): " (pr-str (:welcome snippets))))
   (fx/initialize-views (:form snippets) (:greeting snippets) (:welcome snippets))
   (add-input-event-listeners "name-input")
   (event/listen (by-id "greet-button")

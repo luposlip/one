@@ -9,7 +9,6 @@
 
 (add-watch state :state-change-key
            (fn [k r o n]
-			 (log/info (log/get-logger "meewee") (str "hvad er k, r, o og n i add-watch state? Det er " (pr-str k) ", " (pr-str r) ", " (pr-str o) " og " (pr-str n)))
              (dispatch/fire :state-change n)))
 
 (def ^{:private true

@@ -9,13 +9,13 @@
             [one.browser.history :as history]
 			[one.logging :as log]))
 
-(def meewee-log (log/get-logger "meewee"))
+(def lupo-log (log/get-logger "luposlip"))
 (log/start-display (log/console-output))
 
 (defn nav-handler
   "Handle navigation events by firing the appropriate view token."
   [{:keys [token navigation?]}]
-  (log/info meewee-log (str "nav-handler: " (pr-str token) " - " (pr-str navigation?)))
+  (log/info lupo-log (str "nav-handler: " (pr-str token) " - " (pr-str navigation?)))
   (when navigation?
     (dispatch/fire token)))
 
