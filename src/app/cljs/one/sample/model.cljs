@@ -1,13 +1,15 @@
 (ns ^{:doc "Contains client-side state, validators for input fields
  and functions which react to changes made to the input fields."}
  one.sample.model
-  (:require [one.dispatch :as dispatch]))
+  (:require [one.dispatch :as dispatch]
+	  		[one.logging :as log]))
 
 (def ^{:doc "An atom containing a map which is the application's current state."}
   state (atom {}))
 
 (add-watch state :state-change-key
            (fn [k r o n]
+			 (log/info (log/get-logger "meewee") (str "hvad er k, r, o og n i add-watch state? Det er " (pr-str k) ", " (pr-str r) ", " (pr-str o) " og " (pr-str n)))
              (dispatch/fire :state-change n)))
 
 (def ^{:private true

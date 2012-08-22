@@ -6,35 +6,43 @@
         [domina :only (by-id set-html! set-styles! destroy-children! append! single-node)]
         [domina.xpath :only (xpath)])
   (:require [goog.dom.forms :as gforms]
-            [goog.style :as style]))
+            [goog.style :as style]
+			[one.logging :as log]))
 
 (def form "//div[@id='form']")
 (def cloud "//div[@id='greeting']")
 (def label "//label[@id='name-input-label']/span")
+(def welcome "//div[@id='welcome']")
 
 (def ^:private
   form-in {:effect :fade :start 0 :end 1 :time 800})
+  
+(def ^:private meewee-log (log/get-logger "meewee"))
 
 (defn initialize-views
   "Accepts the form and greeting view HTML and adds them to the
   page. Animates the form sliding in from above. This function must be
   run before any other view functions. It may be called from any state
   to reset the UI."
-  [form-html greeting-html]
+  [form-html greeting-html welcome-html]
   (let [content (xpath "//div[@id='content']")]
     (destroy-children! content)
     (set-html! content form-html)
+	(append! content welcome-html)
+	(log/info meewee-log (str "welcome-html er: " (pr-str welcome-html)))
     (append! content greeting-html)
     ;; Required for IE8 to work correctly
     (style/setOpacity (single-node (xpath label)) 1)
     (set-styles! (xpath cloud) {:opacity "0" :display "none" :margin-top "-500px"})
+    (set-styles! (xpath welcome) {:opacity "0"})
     (set-styles! (by-id "greet-button") {:opacity "0.2" :disabled true})
     (play form form-in {:after #(.focus (by-id "name-input") ())})))
 
 (comment ;; Try it
 
   (initialize-views (:form one.sample.view/snippets)
-                    (:greeting one.sample.view/snippets))
+                    (:greeting one.sample.view/snippets)
+					(:welcome one.sample.view/snippets))
   
   )
 
@@ -86,6 +94,10 @@
                      ;; We need this next one because IE8 won't hide the button
                      :after #(set-styles! (by-id "greet-button") {:display "none"})})))
 
+(defn show-welcome []
+	(log/info meewee-log "hey, hvad sker der her i show-welcome??")
+	(play-animation (bind welcome {:effect :fade-in-and-show :time 600})))
+	
 (defn show-form
   "Move the greeting cloud out of view and show the form. Run when the
   back button is clicked from the greeting view."
@@ -101,7 +113,7 @@
                    :after #(do
                              (gforms/setDisabled (by-id "name-input") false)
                              (.focus (by-id "name-input") ()))}))
-
+							 
 (comment ;; Switch between greeting and form views
 
   (label-move-up label)
@@ -128,7 +140,8 @@
 (comment ;; Examples of all effects
 
   (initialize-views (:form one.sample.view/snippets)
-                    (:greeting one.sample.view/snippets))
+                    (:greeting one.sample.view/snippets)
+					(:welcome one.sample.view/snippets))
   (label-move-up label)
   (label-fade-out label)
   (show-greeting)
